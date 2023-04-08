@@ -5,12 +5,12 @@ import (
 )
 
 type User struct {
-	name          string
+	name string
 }
 
-func (U User) cal(weight, height float64) (result float64){
+func (U User) cal(weight, height float64) (result float64) {
 	result = (weight / height / height) * 10000
-	return 
+	return
 }
 
 func main() {
