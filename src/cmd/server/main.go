@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"os"
 	"os/signal"
-	"time"
 
 	hellopb "mygrpc/pkg/grpc"
 
@@ -29,21 +30,23 @@ func (s *myServer) Hello(ctx context.Context, req *hellopb.HelloRequest) (*hello
 	}, nil
 }
 
-func (s *myServer) HelloServerStream(req *hellopb.HelloRequest, stream hellopb.GreetingService_HelloServerStreamServer) error {
-	resCount := 5
-	for i := 0; i < resCount; i++ {
-		if err := stream.Send(&hellopb.HelloResponse{
-			Message: fmt.Sprintf("[%d] Hello, %s!", i, req.GetName()),
-		}); err != nil {
+func (s *myServer) HelloClientStream(stream hellopb.GreetingService_HelloClientStreamServer) error {
+	nameList := make([]string, 0)
+	for {
+		req, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			message := fmt.Sprintf("Hello, %v!", nameList)
+			return stream.SendAndClose(&hellopb.HelloResponse{
+				Message: message,
+			})
+		}
+		if err != nil {
 			return err
 		}
-		time.Sleep(time.Second * 1)
+		nameList = append(nameList, req.GetName())
 	}
-	return nil
 }
-
 func main() {
-	// 1. 8080番portのLisnterを作成
 	port := 8090
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
