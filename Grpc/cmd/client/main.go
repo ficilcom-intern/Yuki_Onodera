@@ -5,9 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	hellopb "github.com/kunikida123456/Grpc/pkg/grpc"
 	"io"
 	"log"
-	hellopb "mygrpc/pkg/grpc"
 	"os"
 
 	"google.golang.org/grpc"
