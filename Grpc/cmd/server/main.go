@@ -17,6 +17,30 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+func main() {
+	port := 8090
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	s := grpc.NewServer()
+	hellopb.RegisterGreetingServiceServer(s, NewMyServer())
+
+	reflection.Register(s)
+
+	go func() {
+		log.Printf("start gRPC server port: %v", port)
+		s.Serve(listener)
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("stopping gRPC server...")
+	s.GracefulStop()
+}
+
 type myServer struct {
 	hellopb.UnimplementedGreetingServiceServer
 }
@@ -59,30 +83,6 @@ func (s *myServer) HelloClientStream(stream hellopb.GreetingService_HelloClientS
 		}
 		nameList = append(nameList, req.GetName())
 	}
-}
-
-func main() {
-	port := 8090
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	s := grpc.NewServer()
-	hellopb.RegisterGreetingServiceServer(s, NewMyServer())
-
-	reflection.Register(s)
-
-	go func() {
-		log.Printf("start gRPC server port: %v", port)
-		s.Serve(listener)
-	}()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("stopping gRPC server...")
-	s.GracefulStop()
 }
 
 func (s *myServer) HelloBiStreams(stream hellopb.GreetingService_HelloBiStreamsServer) error {
