@@ -1,81 +1,65 @@
+// main.go
 package main
 
 import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
+	"net/http"
+	"time"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
+var db *sql.DB
+
 const (
-	HOST     = os.Getenv("localhost")
-	DATABASE = os.Getenv("postgres")
-	USER     = os.Getenv("postgres")
-	PASSWORD = os.Getenv("postgres")
+	// postgres接続情報
+	conn = "host=postgres port=5432 user=postgres password=secret dbname=simplebank sslmode=disable"
 )
 
-type User struct {
-	Id   int    `db:"user_id"`
-	Name string `db:"user_name"`
+func logFatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func loadEnv() {
-	err := godotenv.Load(".env")
+// めっちゃ重い処理
+func slowQuery() error {
+	_, err := db.Exec("SELECT pg_sleep(5)")
+	return err
+}
 
+func slowHandler(w http.ResponseWriter, req *http.Request) {
+	start := time.Now()
+	err := slowQuery()
 	if err != nil {
-		fmt.Printf("読み込み出来ませんでした: %v", err)
+		log.Printf("Error: %s\n", err.Error())
+		return
 	}
-
-	message := os.Getenv("SAMPLE_MESSAGE")
-
-	fmt.Println(message)
+	fmt.Fprintln(w, "OK")
+	fmt.Printf("slowHandler took: %v\n", time.Since(start))
 }
 
 func main() {
-	var connectionString string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", HOST, USER, PASSWORD, DATABASE)
-	db, err := sql.Open("postgres", connectionString)
-	if err != nil {
-		panic(err)
+	var err error
+
+	// postgresに接続
+	db, err = sql.Open("postgres", conn)
+	logFatal(err)
+
+	// 応答確認
+	err = db.Ping()
+	logFatal(err)
+
+	// serverの基本設定
+	srv := http.Server{
+		Addr:         ":8080",
+		WriteTimeout: 2 * time.Second,
+		Handler:      http.HandlerFunc(slowHandler),
 	}
 
-	_, err = db.Exec("DROP TABLE IF EXISTS users;")
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = db.Exec("CREATE TABLE users (user_id serial PRIMARY KEY, user_name VARCHAR(50));")
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = db.Exec(`
-		INSERT INTO
-			users (user_name)
-		VALUES
-			('太郎'),
-			('二郎'),
-			('三郎')
-	`)
-	if err != nil {
-		panic(err)
-	}
-
-	rows, err := db.Query("SELECT * FROM users")
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-
-	var user User
-	for rows.Next() {
-		err := rows.Scan(&user.Id, &user.Name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("ID: %s, Name: %s\n", strconv.Itoa(user.Id), user.Name)
-	}
+	// serverスタート
+	log.Println("Start Http Server...")
+	log.Fatal(srv.ListenAndServe())
 }
