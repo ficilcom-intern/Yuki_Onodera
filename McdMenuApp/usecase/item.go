@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -13,36 +14,26 @@ import (
 // ItemUsecase item usecaseのinterface
 type ItemUsecase interface {
 	ScrapeItems() ([]model.Item, error)
-	InsertInitialData(items []model.Item)
+	InsertInitialData() (items []model.Item)
 }
 
-type menuitemUsecase struct {
-	menuitemRepo repository.ItemRepository
+type itemUsecase struct {
+	itemRepo repository.ItemRepository
 }
 
 // NewItemUsecase item usecaseのコンストラクタ
 func NewItemUsecase(ItemRepo repository.ItemRepository) ItemUsecase {
-	return &menuitemUsecase{menuitemRepo: ItemRepo}
+	return &itemUsecase{itemRepo: ItemRepo}
 }
 
-func (m *menuitemUsecase) InsertInitialData(items []model.Item) error {
+func (m *itemUsecase) InsertInitialData(items []model.Item) error {
 	for _, item := range items {
-		_, err := m.menuitemRepo.Create(item)
+		_, err := m.itemRepo.Create(item)
 		if err != nil {
 			return nil, err
 		}
 	}
 	return nil
-}
-
-// FindByID itemをIDで取得するときのユースケース
-func (mu *menuitemUsecase) FindByKindID(id int) (*model.Item, error) {
-	foundItem, err := mu.menuitemRepo.FindByID(id)
-	if err != nil {
-		return nil, err
-	}
-
-	return foundItem, nil
 }
 
 // ScrapeItems マックの公式からメニューのテーブルをスクレイピング
@@ -83,7 +74,6 @@ func ScrapeData() (Items []model.Item) {
 		}
 	})
 	return items
-
 }
 
 func getKindID(s string) int {
@@ -101,4 +91,30 @@ func getKindID(s string) int {
 	}
 }
 
-func makeRandomMenu()
+func (iu *itemUsecase) makeMenu(k kind) (menu, error) {
+	menu *= []string
+	for i := 0; i < 4; i++ {
+		item, err :=  iu.itemRepo.FindByKindID(i+1)
+		if err != nil {
+			return err
+		}
+		switch i {
+		case 0:
+			m.Drink = item
+		case 1:
+			m.Burger = item
+		case 2:
+			m.Side = item
+		case 3:
+			m.Barista = item
+		menu = append(menu, item)		
+	}
+	return menu
+}
+
+type kind struct {
+	Drink   string 
+	Burger  string 
+	Side    string 
+	Barista string 
+}

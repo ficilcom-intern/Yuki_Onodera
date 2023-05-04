@@ -1,6 +1,7 @@
 package model
 
 type Item struct {
+	ID            int
 	KindID        int
 	Name          string
 	Energy        float64

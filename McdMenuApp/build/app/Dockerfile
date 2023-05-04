@@ -1,7 +1,12 @@
-FROM golang:1.19.1-alpine
+FROM golang:1.20-alpine
 
-RUN mkdir -p /usr/local/go/src/mcd_menu_app/app
-
-WORKDIR /usr/local/go/src/mcd_menu_app/app
+ENV ROOT=/go/src/app
+WORKDIR ${ROOT}
 
 RUN apk update && apk add git
+
+COPY ./main.go ${ROOT}
+
+COPY go.mod ${ROOT}
+
+RUN go mod tidy

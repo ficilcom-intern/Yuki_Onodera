@@ -1,8 +1,8 @@
 package model
 
 type Kind struct {
-	KindID int    `db:"kind_id"`
-	Name   string `db:"name"`
+	ID     int
+	Name   string
 }
 
 func NewKind(name string) (*Kind, error) {

@@ -15,19 +15,17 @@ func NewItemRepository(conn *gorm.DB) repository.ItemRepository {
 	return &ItemRepository{Conn: conn}
 }
 
-func (tr *ItemRepository) Create(item *model.Item) (*model.Item, error) {
-	if err := tr.Conn.Create(&item).Error; err != nil {
+func (ir *ItemRepository) Create(item *model.Item) (*model.Item, error) {
+	if err := ir.Conn.Create(&item).Error; err != nil {
 		return nil, err
 	}
 	return item, nil
 }
 
-func (tr *ItemRepository) FindByKindID(kind_id int) (*model.Item, error) {
+func (ir *ItemRepository) FindByKindID(kind_id int) (*model.Item, error) {
 	item := &model.Item{ID: kind_id}
-
-	if err := tr.Conn.First(&item).Error; err != nil {
+	if err := ir.Conn.First(&item).Error; err != nil {
 		return nil, err
 	}
-
 	return item, nil
 }

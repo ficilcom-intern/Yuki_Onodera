@@ -14,6 +14,7 @@ func main() {
     itemRepository := infra.NewItemRepository(config.NewDB())
     itemUsecase := usecase.NewItemUsecase(itemRepository)
     itemHandler := handler.NewItemHandler(itemUsecase)
+    itemUsecase.MakeMenu()
 
     e := echo.New()
     handler.InitRouting(e, itemHandler)

@@ -3,16 +3,15 @@ version: '3.8'
 services:
   # go_app
   app:
-    container_name: ${APP_CONTAINER_NAME}
-    build: 
+    build:
       context: .
       dockerfile: ./build/app/Dockerfile
-    volumes: 
-      - ./app:/usr/local/go/src/web/app
-      - .env:/usr/local/go/src/web/app/.env
-    tty: true 
     depends_on:
-      - db
+    - db
+    volumes:
+      - ./:/go/src/app
+      - .env:/go/src/app/.env
+    tty: true
     ports:
       - ${APP_PORT}
 
