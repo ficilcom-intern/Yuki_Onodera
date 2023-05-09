@@ -26,27 +26,26 @@ func NewMealHandler(mealUsecase usecase.MealUsecase) MealHandler {
 	return &mealHandler{mealUsecase: mealUsecase}
 }
 
-type response struct {
-	ID       int     `json:"id"`
-	Type     string  `json:"type"`
-	Memo     string  `json:"memo"`
-	Carbs    float64 `json:"carbs"`
-	Fat      float64 `json:"fat"`
-	Protein  float64 `json:"protein"`
-	Calories float64 `json:"calories"`
-}
-
-type request struct {
-	Memo     string  `json:"memo" `
-	Type     string  `json:"type" `
-	Carbs    float64 `json:"carbs"`
-	Fat      float64 `json:"fat"`
-	Protein  float64 `json:"protein"`
-	Calories float64 `json:"calories"`
-}
-
 // Post mealを保存するときのハンドラー
 func (mh *mealHandler) Post(c echo.Context) error {
+
+	type (
+		request struct {
+			Memo     string  `json:"memo" `
+			Type     string  `json:"type" `
+			Carbs    float64 `json:"carbs"`
+			Fat      float64 `json:"fat"`
+			Protein  float64 `json:"protein"`
+			Calories float64 `json:"calories"`
+		}
+
+		response struct {
+			ID   int    `json:"id"`
+			Type string `json:"type"`
+			Memo string `json:"memo"`
+		}
+	)
+
 	req := new(request)
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -68,6 +67,17 @@ func (mh *mealHandler) Post(c echo.Context) error {
 
 // Get mealを取得するときのハンドラー
 func (mh *mealHandler) Get(c echo.Context) error {
+
+	type response struct {
+		ID       int     `json:"id"`
+		Memo     string  `json:"memo"`
+		Type     string  `json:"type"`
+		Carbs    float64 `json:"carbs"`
+		Fat      float64 `json:"fat"`
+		Protein  float64 `json:"protein"`
+		Calories float64 `json:"calories"`
+	}
+
 	id, err := strconv.Atoi((c.Param("id")))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -78,6 +88,7 @@ func (mh *mealHandler) Get(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	res := response{
+		ID:       foundMeal.ID,
 		Memo:     foundMeal.Memo,
 		Type:     foundMeal.Type,
 		Carbs:    foundMeal.Carbs,
@@ -91,6 +102,22 @@ func (mh *mealHandler) Get(c echo.Context) error {
 
 // Put mealを更新するときのハンドラー
 func (mh *mealHandler) Put(c echo.Context) error {
+	type (
+		request struct {
+			Memo     string  `json:"memo" `
+			Type     string  `json:"type" `
+			Carbs    float64 `json:"carbs"`
+			Fat      float64 `json:"fat"`
+			Protein  float64 `json:"protein"`
+			Calories float64 `json:"calories"`
+		}
+		response struct {
+			ID   int    `json:"id"`
+			Type string `json:"type"`
+			Memo string `json:"memo"`
+		}
+	)
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
