@@ -4,7 +4,7 @@ import (
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -15,10 +15,22 @@ func NewUserRepository(conn *gorm.DB) repository.UserRepository {
 	return &UserRepository{Conn: conn}
 }
 
-func (ur *UserRepository) Create(user *model.User) (*model.User, error) {
+func (ur *UserRepository) CreateUser(user *model.User) (*model.User, error) {
 	if err := ur.Conn.Create(&user).Error; err != nil {
 		return nil, err
 	}
 
 	return user, nil
+}
+
+func (ur *UserRepository) GetUserByEmail(email string) (*model.User, error) {
+    u := model.User{}
+    err := ur.Conn.Where("email = ?", email).First(&u).Error
+    if err != nil {
+        if err == gorm.ErrRecordNotFound {
+            return &model.User{}, nil
+        }
+        return nil, err
+    }
+    return &u, nil
 }

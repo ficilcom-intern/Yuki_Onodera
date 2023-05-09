@@ -7,7 +7,7 @@ import (
 
 type Meal struct {
 	ID        int        `json:"id" gorm:"primaryKey"`
-	User      User       `json:"user_id" gorm:"references:UserID"`
+	UserID    int        `json:"user_id" gorm:"references:UserID"`
 	Memo      string     `json:"memo" gorm:"default:null"`
 	Type      string     `json:"type" gorm:"default:null"`
 	Carbs     float64    `json:"carbs" gorm:"default:null"`

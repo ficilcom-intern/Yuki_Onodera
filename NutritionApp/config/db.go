@@ -12,7 +12,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewDB() *gorm.DB {
+var DB *gorm.DB
+
+func Connect() {
 	err := gotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -31,6 +33,4 @@ func NewDB() *gorm.DB {
 
 	db.AutoMigrate(model.User{}, model.Meal{})
 	// db.Model(model.Item{}).AddForeignKey("id", "kind(id)", "RESTRICT", "RESTRICT")
-
-	return db
 }
