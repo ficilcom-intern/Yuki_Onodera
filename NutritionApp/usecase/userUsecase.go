@@ -30,7 +30,6 @@ func NewUserUsecase(userRepo repository.UserRepository) UserUsecase {
 func (uu *userUsecase) Signup(name, email, password string) (*model.User, error) {
 
 	exsitUser, err := uu.repository.GetUserByEmail(email)
-
 	if err != nil {
 		return nil, &myerror.InternalServerError{Err: err}
 	}

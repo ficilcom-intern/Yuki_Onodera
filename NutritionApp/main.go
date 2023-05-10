@@ -10,9 +10,6 @@ import (
 func main() {
 	e := echo.New()
 	config.Connect()
-	db, _ := config.DB.DB()
-	defer db.Close()
-
 	handler.InitRouting(e)
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8088"))
 }

@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
 
 func Connect() {
 	err := gotenv.Load()
@@ -26,11 +26,15 @@ func Connect() {
 	dbPass := os.Getenv("DB_PASSWORD")
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Tokyo", dbHost, dbUser, dbPass, dbName)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
 	db.AutoMigrate(model.User{}, model.Meal{})
 	// db.Model(model.Item{}).AddForeignKey("id", "kind(id)", "RESTRICT", "RESTRICT")
+}
+
+func DB() *gorm.DB{
+	return db
 }

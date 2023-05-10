@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -43,6 +44,7 @@ func (uh *userHandler) Signup(c echo.Context) error {
 	}
 
 	createdUser, err := uh.userUsecase.Signup(req.Name, req.Email, req.Password)
+	fmt.Println(createdUser)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
