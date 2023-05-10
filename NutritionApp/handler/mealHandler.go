@@ -28,11 +28,10 @@ func NewMealHandler(mealUsecase usecase.MealUsecase) MealHandler {
 
 // Post mealを保存するときのハンドラー
 func (mh *mealHandler) Post(c echo.Context) error {
-
 	type (
 		request struct {
 			Memo     string  `json:"memo" `
-			Type     string  `json:"type" `
+			MealType string  `json:"mealtype" `
 			Carbs    float64 `json:"carbs"`
 			Fat      float64 `json:"fat"`
 			Protein  float64 `json:"protein"`
@@ -40,9 +39,9 @@ func (mh *mealHandler) Post(c echo.Context) error {
 		}
 
 		response struct {
-			ID   int    `json:"id"`
-			Type string `json:"type"`
-			Memo string `json:"memo"`
+			ID       int    `json:"id"`
+			MealType string `json:"mealtype"`
+			Memo     string `json:"memo"`
 		}
 	)
 
@@ -51,15 +50,15 @@ func (mh *mealHandler) Post(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	createdMeal, err := mh.mealUsecase.Create(req.Memo, req.Type, req.Carbs, req.Fat, req.Protein, req.Calories)
+	createdMeal, err := mh.mealUsecase.Create(req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	res := response{
-		ID:   createdMeal.ID,
-		Type: createdMeal.Type,
-		Memo: createdMeal.Memo,
+		ID:       createdMeal.ID,
+		MealType: createdMeal.MealType,
+		Memo:     createdMeal.Memo,
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -71,7 +70,7 @@ func (mh *mealHandler) Get(c echo.Context) error {
 	type response struct {
 		ID       int     `json:"id"`
 		Memo     string  `json:"memo"`
-		Type     string  `json:"type"`
+		MealType string  `json:"mealtype"`
 		Carbs    float64 `json:"carbs"`
 		Fat      float64 `json:"fat"`
 		Protein  float64 `json:"protein"`
@@ -90,7 +89,7 @@ func (mh *mealHandler) Get(c echo.Context) error {
 	res := response{
 		ID:       foundMeal.ID,
 		Memo:     foundMeal.Memo,
-		Type:     foundMeal.Type,
+		MealType: foundMeal.MealType,
 		Carbs:    foundMeal.Carbs,
 		Fat:      foundMeal.Fat,
 		Protein:  foundMeal.Protein,
@@ -105,16 +104,16 @@ func (mh *mealHandler) Put(c echo.Context) error {
 	type (
 		request struct {
 			Memo     string  `json:"memo" `
-			Type     string  `json:"type" `
+			MealType string  `json:"mealtype" `
 			Carbs    float64 `json:"carbs"`
 			Fat      float64 `json:"fat"`
 			Protein  float64 `json:"protein"`
 			Calories float64 `json:"calories"`
 		}
 		response struct {
-			ID   int    `json:"id"`
-			Type string `json:"type"`
-			Memo string `json:"memo"`
+			ID       int    `json:"id"`
+			MealType string `json:"type"`
+			Memo     string `json:"memo"`
 		}
 	)
 
@@ -129,15 +128,15 @@ func (mh *mealHandler) Put(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	updatedMeal, err := mh.mealUsecase.Update(id, req.Memo, req.Type, req.Carbs, req.Fat, req.Protein, req.Calories)
+	updatedMeal, err := mh.mealUsecase.Update(id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	res := response{
-		ID:   updatedMeal.ID,
-		Type: updatedMeal.Type,
-		Memo: updatedMeal.Memo,
+		ID:       updatedMeal.ID,
+		MealType: updatedMeal.MealType,
+		Memo:     updatedMeal.Memo,
 	}
 
 	return c.JSON(http.StatusOK, res)

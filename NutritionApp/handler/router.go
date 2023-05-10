@@ -11,17 +11,18 @@ import (
 
 // InitRouting routesの初期化
 func InitRouting(e *echo.Echo) *echo.Echo {
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	// e.Use(middleware.Logger())
+	// e.Use(middleware.Recover())
 
-	// meals := e.Group("/meals")
+	meals := e.Group("/meals")
+	meals.Use(middleware.Logger())
 
-	// mealHandler := NewMealHandler(usecase.NewMealUsecase(infra.NewMealRepository(config.DB)))
+	mealHandler := NewMealHandler(usecase.NewMealUsecase(infra.NewMealRepository(config.DB())))
 
-	// meals.GET("/:id", mealHandler.Get)
-	// meals.POST("", mealHandler.Post)
-	// meals.PUT("/:id", mealHandler.Put)
-	// meals.DELETE("/:id", mealHandler.Delete)
+	meals.GET("/:id", mealHandler.Get)
+	meals.POST("", mealHandler.Post)
+	meals.PUT("/:id", mealHandler.Put)
+	meals.DELETE("/:id", mealHandler.Delete)
 
 	users := e.Group("/users")
 	userHandler := NewUserHandler(usecase.NewUserUsecase(infra.NewUserRepository(config.DB())))

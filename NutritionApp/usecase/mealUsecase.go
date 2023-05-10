@@ -21,8 +21,8 @@ func NewMealUsecase(mealRepo repository.MealRepository) MealUsecase {
 	return &mealUsecase{mealRepo: mealRepo}
 }
 
-func (mu *mealUsecase) Create(memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
-	meal, err := model.NewMeal(memo, Type, carbs, fat, protein, calories)
+func (mu *mealUsecase) Create(memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
+	meal, err := model.NewMeal(memo, mealType, carbs, fat, protein, calories)
 	if err != nil {
 		return nil, err
 	}

@@ -15,5 +15,5 @@ type InternalServerError struct {
 }
 
 func (e *InternalServerError) Error() string {
-	return "Internal Server Errorです"
+	return "Internal Server Error"
 }
