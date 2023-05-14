@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"time"
 )
 
@@ -18,12 +17,13 @@ type Meal struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 }
 
-func NewMeal(memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*Meal, error) {
-	if mealType == "" {
-		return nil, errors.New("食事の種類を入力してください")
-	}
+func NewMeal(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*Meal, error) {
+	// if mealType == "" {
+	// 	return nil, errors.New("食事の種類を入力してください")
+	// }
 
 	meal := &Meal{
+		UserID:   userID,
 		Memo:     memo,
 		MealType: mealType,
 		Carbs:    carbs,
@@ -34,11 +34,12 @@ func NewMeal(memo string, mealType string, carbs float64, fat float64, protein f
 	return meal, nil
 }
 
-func (m *Meal) Set(memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) error {
-	if mealType == "" {
-		return errors.New("食事の種類を入力してください")
-	}
-
+func (m *Meal) Set(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) error {
+	// if mealType == "" {
+	// 	return errors.New("食事の種類を入力してください")
+	// }
+	
+	m.UserID = userID
 	m.Memo = memo
 	m.MealType = mealType
 	m.Carbs = carbs

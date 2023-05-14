@@ -7,4 +7,5 @@ import (
 type UserRepository interface {
 	CreateUser(meal *model.User) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
+	// UserExists(uid int64) error
 }

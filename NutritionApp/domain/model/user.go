@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	ID        int64      `json:"user_id" gorm:"praimaly_key"`
+	ID        int        `json:"user_id" gorm:"praimaly_key"`
 	Meals     []Meal     `json:"meals" gorm:"foreignKey:UserID"`
 	Name      string     `json:"name"`
 	Email     string     `json:"email"`

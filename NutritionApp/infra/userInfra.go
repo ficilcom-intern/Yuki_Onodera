@@ -35,3 +35,11 @@ func (ur *UserRepository) GetUserByEmail(email string) (*model.User, error) {
 	}
 	return &u, nil
 }
+
+// func (ur *UserRepository) UserExists(uid int) error {
+// 	u := model.User{}
+// 	if err := ur.Conn.First(&u, uid).Error; err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }

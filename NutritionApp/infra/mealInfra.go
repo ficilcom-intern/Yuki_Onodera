@@ -24,7 +24,7 @@ func (mr *MealRepository) Create(meal *model.Meal) (*model.Meal, error) {
 
 // Update mealの更新
 func (mr *MealRepository) Update(meal *model.Meal) (*model.Meal, error) {
-	if err := mr.Conn.Save(&meal).Error; err != nil{
+	if err := mr.Conn.Save(&meal).Error; err != nil {
 		return nil, err
 	}
 
@@ -40,18 +40,10 @@ func (mr *MealRepository) Delete(meal *model.Meal) error {
 	return nil
 }
 
-func (mr *MealRepository) FindByID(id int) (*model.Meal, error) {
-	meal := &model.Meal{ID: id}
+func (mr *MealRepository) FindByID(id int, uid int) (*model.Meal, error) {
+	meal := &model.Meal{ID: id, UserID: uid}
 	if err := mr.Conn.First(&meal).Error; err != nil {
 		return nil, err
 	}
 	return meal, nil
-}
-
-func (mr *MealRepository) FindByUser(user_id int) ([]*model.Meal, error) {
-	meals := []*model.Meal{}
-	if err := mr.Conn.Where("user_id = ?", user_id).Find(&meals).Error; err != nil {
-		return nil, err
-	}
-	return meals, nil
 }

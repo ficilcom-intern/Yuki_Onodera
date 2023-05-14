@@ -8,13 +8,11 @@ WORKDIR ${ROOT}
 RUN apk update && apk add git
 RUN apk update && apk add curl
 
-
+RUN go install github.com/cosmtrek/air@latest
 COPY go.mod go.sum ./
 RUN go mod download
 EXPOSE 8080
 
-RUN go install github.com/cosmtrek/air@latest
 
 CMD ["air", "-c", ".air.toml"]
 
-CMD ["go", "run", "main.go"]

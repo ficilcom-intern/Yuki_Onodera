@@ -1,0 +1,239 @@
+definitions:
+  handler.getMealsResponse:
+    properties:
+      calories:
+        type: number
+      carbs:
+        type: number
+      fat:
+        type: number
+      id:
+        type: integer
+      mealtype:
+        type: string
+      memo:
+        type: string
+      protein:
+        type: number
+    type: object
+  handler.postMealRequest:
+    properties:
+      calories:
+        type: number
+      carbs:
+        type: number
+      fat:
+        type: number
+      mealtype:
+        type: string
+      memo:
+        type: string
+      protein:
+        type: number
+    type: object
+  handler.postMealResponse:
+    properties:
+      calories:
+        type: number
+      carbs:
+        type: number
+      fat:
+        type: number
+      id:
+        type: integer
+      mealtype:
+        type: string
+      memo:
+        type: string
+      protein:
+        type: number
+    type: object
+  handler.putMealsRequest:
+    properties:
+      calories:
+        type: number
+      carbs:
+        type: number
+      fat:
+        type: number
+      mealtype:
+        type: string
+      memo:
+        type: string
+      protein:
+        type: number
+    type: object
+  handler.putMealsResponse:
+    properties:
+      calories:
+        type: number
+      carbs:
+        type: number
+      fat:
+        type: number
+      id:
+        type: integer
+      mealtype:
+        type: string
+      memo:
+        type: string
+      protein:
+        type: number
+    type: object
+  myerror.BadRequestError:
+    properties:
+      err:
+        type: string
+      msg:
+        type: string
+    type: object
+  myerror.InternalServerError:
+    properties:
+      err:
+        type: string
+      msg:
+        type: string
+    type: object
+  myerror.NotFoundError:
+    properties:
+      err:
+        type: string
+      msg:
+        type: string
+    type: object
+  myerror.UnauthorizedError:
+    properties:
+      err:
+        type: string
+      msg:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API server for the Nutrition App
+  title: Nutrition App API
+  version: "1"
+paths:
+  /meals:
+    post:
+      consumes:
+      - application/json
+      description: 食事を追加する
+      operationId: postMeals
+      parameters:
+      - description: 食事情報
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.postMealRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.postMealResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/myerror.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/myerror.UnauthorizedError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/myerror.InternalServerError'
+  /meals/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 食事を消去する
+      operationId: deleteMealsId
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/myerror.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/myerror.UnauthorizedError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/myerror.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/myerror.InternalServerError'
+    get:
+      consumes:
+      - application/json
+      description: 食事を追加する
+      operationId: getMealsId
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getMealsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/myerror.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/myerror.UnauthorizedError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/myerror.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/myerror.InternalServerError'
+    put:
+      consumes:
+      - application/json
+      description: 食事を追加する
+      operationId: putMealsId
+      parameters:
+      - description: 食事情報
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.putMealsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.putMealsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/myerror.BadRequestError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/myerror.UnauthorizedError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/myerror.NotFoundError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/myerror.InternalServerError'
+swagger: "2.0"

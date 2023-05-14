@@ -33,7 +33,6 @@ func (uu *userUsecase) Signup(name, email, password string) (*model.User, error)
 	if err != nil {
 		return nil, &myerror.InternalServerError{Err: err}
 	}
-
 	if exsitUser.ID != 0 {
 		return nil, &myerror.BadRequestError{Err: errors.New("user already exists")}
 	}

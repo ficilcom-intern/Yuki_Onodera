@@ -5,8 +5,9 @@ import (
 	"strconv"
 
 	"kunikida123456/NutritionApp/usecase"
+	"kunikida123456/NutritionApp/util"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 // MealHandler meal handlerのinterface
@@ -21,72 +22,109 @@ type mealHandler struct {
 	mealUsecase usecase.MealUsecase
 }
 
-// NewMealHandler meal handlerのコンストラクタ
 func NewMealHandler(mealUsecase usecase.MealUsecase) MealHandler {
 	return &mealHandler{mealUsecase: mealUsecase}
 }
 
-// Post mealを保存するときのハンドラー
+type postMealRequest struct {
+	Memo     string  `json:"memo" `
+	MealType string  `json:"mealtype" `
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Protein  float64 `json:"protein"`
+	Calories float64 `json:"calories"`
+}
+
+type postMealResponse struct {
+	ID       int     `json:"id"`
+	Memo     string  `json:"memo" `
+	MealType string  `json:"mealtype" `
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Protein  float64 `json:"protein"`
+	Calories float64 `json:"calories"`
+}
+
+// Postmeals godoc
+// @ID postMeals
+// @Description 食事を追加する
+// @Accept   json
+// @Produce  json
+// @Router   /meals [post]
+// @Param    body body postMealRequest true "食事情報"
+// @Success  201 {object} postMealResponse
+// @Failure  400 {object} myerror.BadRequestError
+// @Failure  401 {object} myerror.UnauthorizedError
+//	@Failure  500 {object} myerror.InternalServerError
 func (mh *mealHandler) Post(c echo.Context) error {
-	type (
-		request struct {
-			Memo     string  `json:"memo" `
-			MealType string  `json:"mealtype" `
-			Carbs    float64 `json:"carbs"`
-			Fat      float64 `json:"fat"`
-			Protein  float64 `json:"protein"`
-			Calories float64 `json:"calories"`
-		}
+	req := new(postMealRequest)
 
-		response struct {
-			ID       int    `json:"id"`
-			MealType string `json:"mealtype"`
-			Memo     string `json:"memo"`
-		}
-	)
-
-	req := new(request)
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	createdMeal, err := mh.mealUsecase.Create(req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
+	userID := util.UserIDFromToken(c)
+	createdMeal, err := mh.mealUsecase.Create(userID, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	res := response{
+	res := postMealResponse{
 		ID:       createdMeal.ID,
-		MealType: createdMeal.MealType,
 		Memo:     createdMeal.Memo,
+		MealType: createdMeal.MealType,
+		Carbs:    createdMeal.Carbs,
+		Fat:      createdMeal.Fat,
+		Protein:  createdMeal.Protein,
+		Calories: createdMeal.Calories,
 	}
 
 	return c.JSON(http.StatusCreated, res)
 }
 
-// Get mealを取得するときのハンドラー
+// Postmeals godoc
+// @ID getMealsId
+// @Description 食事を追加する
+// @Accept   json
+// @Produce  json
+// @Router   /meals/{id} [get]
+// @Success  200 {object} getMealResponse
+// @Failure  400 {object} myerror.BadRequestError
+// @Failure  401 {object} myerror.UnauthorizedError
+// @Failure  404 {object} myerror.NotFoundError
+//	@Failure  500 {object} myerror.InternalServerError
+
+type getMealsResponse struct {
+	ID       int     `json:"id"`
+	Memo     string  `json:"memo"`
+	MealType string  `json:"mealtype"`
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Protein  float64 `json:"protein"`
+	Calories float64 `json:"calories"`
+}
+// Getmeals godoc
+// @ID getMealsId
+// @Description 食事を追加する
+// @Accept   json
+// @Produce  json
+// @Router   /meals/{id} [get]
+// @Success  200 {object} getMealsResponse
+// @Failure  400 {object} myerror.BadRequestError
+// @Failure  401 {object} myerror.UnauthorizedError
+// @Failure  404 {object} myerror.NotFoundError
+//	@Failure  500 {object} myerror.InternalServerError
 func (mh *mealHandler) Get(c echo.Context) error {
-
-	type response struct {
-		ID       int     `json:"id"`
-		Memo     string  `json:"memo"`
-		MealType string  `json:"mealtype"`
-		Carbs    float64 `json:"carbs"`
-		Fat      float64 `json:"fat"`
-		Protein  float64 `json:"protein"`
-		Calories float64 `json:"calories"`
-	}
-
 	id, err := strconv.Atoi((c.Param("id")))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	foundMeal, err := mh.mealUsecase.FindByID(id)
+	foundMeal, err := mh.mealUsecase.FindByID(c, id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	res := response{
+	res := getMealsResponse{
 		ID:       foundMeal.ID,
 		Memo:     foundMeal.Memo,
 		MealType: foundMeal.MealType,
@@ -99,57 +137,85 @@ func (mh *mealHandler) Get(c echo.Context) error {
 
 }
 
-// Put mealを更新するときのハンドラー
-func (mh *mealHandler) Put(c echo.Context) error {
-	type (
-		request struct {
-			Memo     string  `json:"memo" `
-			MealType string  `json:"mealtype" `
-			Carbs    float64 `json:"carbs"`
-			Fat      float64 `json:"fat"`
-			Protein  float64 `json:"protein"`
-			Calories float64 `json:"calories"`
-		}
-		response struct {
-			ID       int    `json:"id"`
-			MealType string `json:"type"`
-			Memo     string `json:"memo"`
-		}
-	)
+type putMealsRequest struct {
+	Memo     string  `json:"memo" `
+	MealType string  `json:"mealtype" `
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Protein  float64 `json:"protein"`
+	Calories float64 `json:"calories"`
+}
 
+type putMealsResponse struct {
+	ID       int     `json:"id"`
+	Memo     string  `json:"memo"`
+	MealType string  `json:"mealtype"`
+	Carbs    float64 `json:"carbs"`
+	Fat      float64 `json:"fat"`
+	Protein  float64 `json:"protein"`
+	Calories float64 `json:"calories"`
+}
+
+// Putmeals godoc
+// @ID putMealsId
+// @Description 食事を追加する
+// @Accept   json
+// @Produce  json
+// @Router   /meals/{id} [put]
+// @Param    body body putMealsRequest true "食事情報"
+// @Success  200 {object} putMealsResponse
+// @Failure  400 {object} myerror.BadRequestError
+// @Failure  401 {object} myerror.UnauthorizedError
+// @Failure  404 {object} myerror.NotFoundError
+//	@Failure  500 {object} myerror.InternalServerError
+func (mh *mealHandler) Put(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	req := new(request)
+	req := new(putMealsRequest)
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	updatedMeal, err := mh.mealUsecase.Update(id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
+	updatedMeal, err := mh.mealUsecase.Update(c, id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	res := response{
+	res := putMealsResponse{
 		ID:       updatedMeal.ID,
-		MealType: updatedMeal.MealType,
 		Memo:     updatedMeal.Memo,
+		MealType: updatedMeal.MealType,
+		Carbs:    updatedMeal.Carbs,
+		Fat:      updatedMeal.Fat,
+		Protein:  updatedMeal.Protein,
+		Calories: updatedMeal.Calories,
 	}
 
 	return c.JSON(http.StatusOK, res)
 }
 
-// Delete mealを削除するときのハンドラー
+// Deletemeals godoc
+// @ID deleteMealsId
+// @Description 食事を消去する
+// @Accept   json
+// @Produce  json
+// @Router   /meals/{id} [delete]
+// @Success  204
+// @Failure  400 {object} myerror.BadRequestError
+// @Failure  401 {object} myerror.UnauthorizedError
+// @Failure  404 {object} myerror.NotFoundError
+// @Failure  500 {object} myerror.InternalServerError
 func (mh *mealHandler) Delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	err = mh.mealUsecase.Delete(id)
+	err = mh.mealUsecase.Delete(c, id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
