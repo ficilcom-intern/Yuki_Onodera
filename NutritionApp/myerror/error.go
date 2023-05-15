@@ -15,7 +15,7 @@ type BadRequestError struct {
 
 func (e *BadRequestError) Error() string {
 	if e.Msg == "" {
-		return fmt.Sprintf("%s",e.Err)
+		return fmt.Sprintf("%s", e.Err)
 	}
 	if e.Err == nil {
 		return e.Msg
@@ -31,7 +31,7 @@ type UnauthorizedError struct {
 
 func (e *UnauthorizedError) Error() string {
 	if e.Msg == "" {
-		return fmt.Sprintf("%s",e.Err)
+		return fmt.Sprintf("%s", e.Err)
 	}
 	if e.Err == nil {
 		return e.Msg
@@ -47,7 +47,7 @@ type NotFoundError struct {
 
 func (e *NotFoundError) Error() string {
 	if e.Msg == "" {
-		return fmt.Sprintf("%s",e.Err)
+		return fmt.Sprintf("%s", e.Err)
 	}
 	if e.Err == nil {
 		return e.Msg
@@ -63,7 +63,7 @@ type InternalServerError struct {
 
 func (e *InternalServerError) Error() string {
 	if e.Msg == "" {
-		return fmt.Sprintf("%s",e.Err)
+		return fmt.Sprintf("%s", e.Err)
 	}
 	if e.Err == nil {
 		return e.Msg

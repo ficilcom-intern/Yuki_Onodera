@@ -36,7 +36,6 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 	users.POST("/login", userHandler.Login)
 	// users.POST("/logout", userHandler.Logout)
 
-	e.Use(middleware.Logger())
 
 	return e
 
