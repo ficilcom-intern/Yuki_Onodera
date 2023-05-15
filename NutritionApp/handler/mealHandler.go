@@ -61,13 +61,13 @@ func (mh *mealHandler) Post(c echo.Context) error {
 	req := new(postMealRequest)
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	userID := util.UserIDFromToken(c)
 	createdMeal, err := mh.mealUsecase.Create(userID, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	res := postMealResponse{
@@ -118,12 +118,12 @@ type getMealsResponse struct {
 func (mh *mealHandler) Get(c echo.Context) error {
 	id, err := strconv.Atoi((c.Param("id")))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	foundMeal, err := mh.mealUsecase.FindByID(c, id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 	res := getMealsResponse{
 		ID:       foundMeal.ID,
@@ -172,18 +172,18 @@ type putMealsResponse struct {
 func (mh *mealHandler) Put(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	req := new(putMealsRequest)
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	updatedMeal, err := mh.mealUsecase.Update(c, id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	res := putMealsResponse{
@@ -213,12 +213,12 @@ func (mh *mealHandler) Put(c echo.Context) error {
 func (mh *mealHandler) Delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	err = mh.mealUsecase.Delete(c, id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	return c.NoContent(http.StatusNoContent)
@@ -239,7 +239,7 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 func (mh *mealHandler) GetAll(c echo.Context) error {
 	foundMeals, err := mh.mealUsecase.FindAll(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
 	return c.JSON(http.StatusOK, foundMeals)
 

@@ -3,6 +3,7 @@ package usecase
 import (
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
+	"kunikida123456/NutritionApp/myerror"
 	"kunikida123456/NutritionApp/util"
 
 	"github.com/labstack/echo/v4"
@@ -27,12 +28,12 @@ func NewMealUsecase(mealRepo repository.MealRepository) MealUsecase {
 func (mu *mealUsecase) Create(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
 	meal, err := model.NewMeal(userID, memo, mealType, carbs, fat, protein, calories)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.BadRequestError{Err: err}
 	}
 
 	createdMeal, err := mu.mealRepo.Create(meal)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.BadRequestError{Err: err}
 	}
 
 	return createdMeal, nil
@@ -42,17 +43,17 @@ func (mu *mealUsecase) Update(c echo.Context, id int, memo string, Type string, 
 	uid := util.UserIDFromToken(c)
 	targetMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.NotFoundError{Err: err}
 	}
 
 	err = targetMeal.Set(uid, memo, Type, carbs, fat, protein, calories)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.BadRequestError{Err: err}
 	}
 
 	updatedMeal, err := mu.mealRepo.Update(targetMeal)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.BadRequestError{Err: err}
 	}
 
 	return updatedMeal, nil
@@ -63,32 +64,31 @@ func (mu *mealUsecase) Delete(c echo.Context, id int) error {
 
 	targetMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
-		return err
+		return &myerror.NotFoundError{Err: err}
 	}
 
 	err = mu.mealRepo.Delete(targetMeal)
 	if err != nil {
-		return err
+		return &myerror.BadRequestError{Err: err}
 	}
 	return nil
 }
 
 func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
 	uid := util.UserIDFromToken(c)
-	foundMeal, err := mu.mealRepo.FindAll(uid)
+	foundMeals, err := mu.mealRepo.FindAll(uid)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.NotFoundError{Err: err}
 	}
 
-	return foundMeal, nil
+	return foundMeals, nil
 }
 
 func (mu *mealUsecase) FindByID(c echo.Context, id int) (*model.Meal, error) {
 	uid := util.UserIDFromToken(c)
-
 	foundMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
-		return nil, err
+		return nil, &myerror.NotFoundError{Err: err}
 	}
 
 	return foundMeal, nil

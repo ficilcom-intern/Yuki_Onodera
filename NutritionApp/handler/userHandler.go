@@ -53,7 +53,7 @@ func (uh *userHandler) Signup(c echo.Context) error {
 
 	createdUser, err := uh.userUsecase.Signup(req.Name, req.Email, req.Password)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	res := userSignupResponse{
@@ -91,7 +91,7 @@ func (uh *userHandler) Login(c echo.Context) error {
 	req := new(userLoginRequest)
 
 	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 	signedString, User, err := uh.userUsecase.Login(req.Email, req.Password)
 
