@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"fmt"
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
 
@@ -46,4 +47,13 @@ func (mr *MealRepository) FindByID(id int, uid int) (*model.Meal, error) {
 		return nil, err
 	}
 	return meal, nil
+}
+
+func (mr *MealRepository) FindAll(uid int) ([]*model.Meal, error) {
+	var meals []*model.Meal
+	err := mr.Conn.Where("user_id = ?", uid).Find(&meals).Error
+	if err != nil {
+		return nil, err
+	}
+	return meals, nil
 }

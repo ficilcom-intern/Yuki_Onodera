@@ -12,7 +12,7 @@ type MealUsecase interface {
 	Create(userID int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error)
 	Update(c echo.Context, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error)
 	Delete(c echo.Context, id int) error
-	// GetAll(user_id int) ([]*model.Meal, error)
+	FindAll(c echo.Context) ([]*model.Meal, error)
 	FindByID(c echo.Context, id int) (*model.Meal, error)
 }
 
@@ -73,14 +73,15 @@ func (mu *mealUsecase) Delete(c echo.Context, id int) error {
 	return nil
 }
 
-// func (mu *mealUsecase) GetAll(user_id int) ([]*model.Meal, error) {
-// 	foundMeal, err := mu.mealRepo.FindByUser(user_id)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
+	uid := util.UserIDFromToken(c)
+	foundMeal, err := mu.mealRepo.FindAll(uid)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return foundMeal, nil
-// }
+	return foundMeal, nil
+}
 
 func (mu *mealUsecase) FindByID(c echo.Context, id int) (*model.Meal, error) {
 	uid := util.UserIDFromToken(c)

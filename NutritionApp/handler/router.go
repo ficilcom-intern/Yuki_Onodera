@@ -5,10 +5,8 @@ import (
 	"kunikida123456/NutritionApp/infra"
 	"kunikida123456/NutritionApp/usecase"
 	"kunikida123456/NutritionApp/util"
-	"kunikida123456/NutritionApp/myerror"
 
 	echojwt "github.com/labstack/echo-jwt/v4"
-	
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,6 +23,7 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 	meals.Use(echojwt.WithConfig(util.Config))
 	// meals.Use(middleware.JWT([]byte(os.Getenv("JWT_SECRET_KEY"))))
 	meals.GET("/:id", mealHandler.Get)
+	meals.GET("", mealHandler.GetAll)
 	meals.POST("", mealHandler.Post)
 	meals.PUT("/:id", mealHandler.Put)
 	meals.DELETE("/:id", mealHandler.Delete)
@@ -34,7 +33,7 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 
 	users.POST("/signup", userHandler.Signup)
 	users.POST("/login", userHandler.Login)
-	users.POST("/logout", userHandler.Logout)
+	// users.POST("/logout", userHandler.Logout)
 
 	e.Use(middleware.Logger())
 

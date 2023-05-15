@@ -14,6 +14,7 @@ import (
 type MealHandler interface {
 	Post(c echo.Context) error
 	Get(c echo.Context) error
+	GetAll(c echo.Context) error
 	Put(c echo.Context) error
 	Delete(c echo.Context) error
 }
@@ -53,9 +54,10 @@ type postMealResponse struct {
 // @Router   /meals [post]
 // @Param    body body postMealRequest true "食事情報"
 // @Success  201 {object} postMealResponse
-// @Failure  400 {object} myerror.BadRequestError
-// @Failure  401 {object} myerror.UnauthorizedError
-//	@Failure  500 {object} myerror.InternalServerError
+// @Failure  400
+// @Failure  401
+//
+//	@Failure  500
 func (mh *mealHandler) Post(c echo.Context) error {
 	req := new(postMealRequest)
 
@@ -82,18 +84,18 @@ func (mh *mealHandler) Post(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
-// Postmeals godoc
+// Getmeals godoc
 // @ID getMealsId
 // @Description 食事を追加する
 // @Accept   json
 // @Produce  json
 // @Router   /meals/{id} [get]
 // @Success  200 {object} getMealResponse
-// @Failure  400 {object} myerror.BadRequestError
-// @Failure  401 {object} myerror.UnauthorizedError
-// @Failure  404 {object} myerror.NotFoundError
-//	@Failure  500 {object} myerror.InternalServerError
-
+// @Failure  400
+// @Failure  401
+// @Failure  404
+//
+//	@Failure 500
 type getMealsResponse struct {
 	ID       int     `json:"id"`
 	Memo     string  `json:"memo"`
@@ -103,6 +105,7 @@ type getMealsResponse struct {
 	Protein  float64 `json:"protein"`
 	Calories float64 `json:"calories"`
 }
+
 // Getmeals godoc
 // @ID getMealsId
 // @Description 食事を追加する
@@ -110,10 +113,10 @@ type getMealsResponse struct {
 // @Produce  json
 // @Router   /meals/{id} [get]
 // @Success  200 {object} getMealsResponse
-// @Failure  400 {object} myerror.BadRequestError
-// @Failure  401 {object} myerror.UnauthorizedError
-// @Failure  404 {object} myerror.NotFoundError
-//	@Failure  500 {object} myerror.InternalServerError
+// @Failure  400
+// @Failure  401
+// @Failure  404
+// @Failure 500
 func (mh *mealHandler) Get(c echo.Context) error {
 	id, err := strconv.Atoi((c.Param("id")))
 	if err != nil {
@@ -164,10 +167,11 @@ type putMealsResponse struct {
 // @Router   /meals/{id} [put]
 // @Param    body body putMealsRequest true "食事情報"
 // @Success  200 {object} putMealsResponse
-// @Failure  400 {object} myerror.BadRequestError
-// @Failure  401 {object} myerror.UnauthorizedError
-// @Failure  404 {object} myerror.NotFoundError
-//	@Failure  500 {object} myerror.InternalServerError
+// @Failure 400
+// @Failure 401
+// @Failure  404
+//
+//	@Failure 500
 func (mh *mealHandler) Put(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -205,10 +209,10 @@ func (mh *mealHandler) Put(c echo.Context) error {
 // @Produce  json
 // @Router   /meals/{id} [delete]
 // @Success  204
-// @Failure  400 {object} myerror.BadRequestError
-// @Failure  401 {object} myerror.UnauthorizedError
-// @Failure  404 {object} myerror.NotFoundError
-// @Failure  500 {object} myerror.InternalServerError
+// @Failure  400
+// @Failure  401
+// @Failure  404
+// @Failure  500
 func (mh *mealHandler) Delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -221,4 +225,25 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+
+// GetAllmeals godoc
+// @ID getMeals
+// @Description 食事を追加する
+// @Accept   json
+// @Produce  json
+// @Router   /meals [get]
+// @Success  200 {array} []getMealsResponse
+// @Failure  400
+// @Failure  401
+// @Failure  404
+//	@Failure 500
+func (mh *mealHandler) GetAll(c echo.Context) error {
+	foundMeals, err := mh.mealUsecase.FindAll(c)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, foundMeals)
+
 }

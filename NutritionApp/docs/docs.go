@@ -45,22 +45,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.BadRequestError"
-                        }
+                        "description": ""
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.UnauthorizedError"
-                        }
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.InternalServerError"
-                        }
+                        "description": ""
                     }
                 }
             }
@@ -83,28 +74,16 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.BadRequestError"
-                        }
+                        "description": ""
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.UnauthorizedError"
-                        }
+                        "description": ""
                     },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.NotFoundError"
-                        }
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.InternalServerError"
-                        }
+                        "description": ""
                     }
                 }
             },
@@ -136,28 +115,16 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.BadRequestError"
-                        }
+                        "description": ""
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.UnauthorizedError"
-                        }
+                        "description": ""
                     },
                     "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.NotFoundError"
-                        }
+                        "description": ""
                     },
                     "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.InternalServerError"
-                        }
+                        "description": ""
                     }
                 }
             },
@@ -175,22 +142,56 @@ const docTemplate = `{
                         "description": ""
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.BadRequestError"
-                        }
+                        "description": ""
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.UnauthorizedError"
-                        }
+                        "description": ""
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": ""
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/users/lgin": {
+            "post": {
+                "description": "ログイン",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "postUsersLogin",
+                "parameters": [
+                    {
+                        "description": "ログイン情報",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/myerror.NotFoundError"
+                            "$ref": "#/definitions/handler.userLoginRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.userLoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -200,10 +201,83 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/logout": {
+            "post": {
+                "description": "ログアウト",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "postUsersLogout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.userLoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/users/signup": {
+            "post": {
+                "description": "サインアップ",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "postUsersSignup",
+                "parameters": [
+                    {
+                        "description": "サインイン情報",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.userSignupRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.userSignupResponse"
+                        }
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "handler.getMealsResponse": {
+            "description": "食事を追加する",
             "type": "object",
             "properties": {
                 "calories": {
@@ -327,40 +401,70 @@ const docTemplate = `{
                 }
             }
         },
-        "myerror.BadRequestError": {
+        "handler.userLoginRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
             "properties": {
-                "err": {
+                "email": {
                     "type": "string"
                 },
-                "msg": {
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.userLoginResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.userSignupRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
+        "handler.userSignupResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }
         },
         "myerror.InternalServerError": {
-            "type": "object",
-            "properties": {
-                "err": {
-                    "type": "string"
-                },
-                "msg": {
-                    "type": "string"
-                }
-            }
-        },
-        "myerror.NotFoundError": {
-            "type": "object",
-            "properties": {
-                "err": {
-                    "type": "string"
-                },
-                "msg": {
-                    "type": "string"
-                }
-            }
-        },
-        "myerror.UnauthorizedError": {
             "type": "object",
             "properties": {
                 "err": {
