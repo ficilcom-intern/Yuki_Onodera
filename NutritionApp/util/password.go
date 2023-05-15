@@ -6,6 +6,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// 与えられたパスワードをハッシュ化
 func HashPassword(password string) (string, error) {
 	if password == "" {
 		return "", errors.New("password is empty")
@@ -18,6 +19,7 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
+// 与えられたハッシュ化されたパスワードと入力されたパスワードを比較
 func CheckPassword(hashedPassword string, inputPassword string) error {
 	if inputPassword == "" {
 		return errors.New("password is empty")
