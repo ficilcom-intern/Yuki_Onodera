@@ -56,8 +56,7 @@ type postMealResponse struct {
 // @Success  201 {object} postMealResponse
 // @Failure  400
 // @Failure  401
-//
-//	@Failure  500
+// @Failure  500
 func (mh *mealHandler) Post(c echo.Context) error {
 	req := new(postMealRequest)
 
@@ -94,8 +93,7 @@ func (mh *mealHandler) Post(c echo.Context) error {
 // @Failure  400
 // @Failure  401
 // @Failure  404
-//
-//	@Failure 500
+// @Failure 500
 type getMealsResponse struct {
 	ID       int     `json:"id"`
 	Memo     string  `json:"memo"`
@@ -108,7 +106,7 @@ type getMealsResponse struct {
 
 // Getmeals godoc
 // @ID getMealsId
-// @Description 食事を追加する
+// @Description 食事を取得する
 // @Accept   json
 // @Produce  json
 // @Router   /meals/{id} [get]
@@ -161,7 +159,7 @@ type putMealsResponse struct {
 
 // Putmeals godoc
 // @ID putMealsId
-// @Description 食事を追加する
+// @Description 食事を更新する
 // @Accept   json
 // @Produce  json
 // @Router   /meals/{id} [put]
@@ -170,8 +168,7 @@ type putMealsResponse struct {
 // @Failure 400
 // @Failure 401
 // @Failure  404
-//
-//	@Failure 500
+// @Failure 500
 func (mh *mealHandler) Put(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -230,7 +227,7 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 
 // GetAllmeals godoc
 // @ID getMeals
-// @Description 食事を追加する
+// @Description すべての食事を取得
 // @Accept   json
 // @Produce  json
 // @Router   /meals [get]

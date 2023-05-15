@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"time"
 )
 
@@ -8,7 +9,7 @@ type Meal struct {
 	ID        int        `json:"id" gorm:"primaryKey"`
 	UserID    int        `json:"user_id" gorm:"references:UserID"`
 	Memo      string     `json:"memo" gorm:"default:null"`
-	MealType  string     `json:"type" gorm:"default:null"`
+	MealType  string     `json:"type" gorm:"unique;not null"`
 	Carbs     float64    `json:"carbs" gorm:"default:null"`
 	Fat       float64    `json:"fat" gorm:"default:null"`
 	Protein   float64    `json:"protein" gorm:"default:null"`
@@ -18,9 +19,9 @@ type Meal struct {
 }
 
 func NewMeal(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*Meal, error) {
-	// if mealType == "" {
-	// 	return nil, errors.New("食事の種類を入力してください")
-	// }
+	if mealType == "" {
+		return nil, errors.New("食事の種類を入力してください")
+	}
 
 	meal := &Meal{
 		UserID:   userID,
@@ -35,10 +36,10 @@ func NewMeal(userID int, memo string, mealType string, carbs float64, fat float6
 }
 
 func (m *Meal) Set(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) error {
-	// if mealType == "" {
-	// 	return errors.New("食事の種類を入力してください")
-	// }
-	
+	if mealType == "" {
+		return errors.New("食事の種類を入力してください")
+	}
+
 	m.UserID = userID
 	m.Memo = memo
 	m.MealType = mealType

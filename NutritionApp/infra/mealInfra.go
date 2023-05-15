@@ -1,7 +1,6 @@
 package infra
 
 import (
-	"fmt"
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
 

@@ -8,6 +8,42 @@
     },
     "paths": {
         "/meals": {
+            "get": {
+                "description": "食事を追加する",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "operationId": "getMeals",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/handler.getMealsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                }
+            },
             "post": {
                 "description": "食事を追加する",
                 "consumes": [
@@ -182,38 +218,6 @@
                         "description": ""
                     },
                     "404": {
-                        "description": ""
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/myerror.InternalServerError"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/logout": {
-            "post": {
-                "description": "ログアウト",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "operationId": "postUsersLogout",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.userLoginResponse"
-                        }
-                    },
-                    "400": {
-                        "description": ""
-                    },
-                    "401": {
                         "description": ""
                     },
                     "500": {
@@ -451,17 +455,6 @@
                     "type": "integer"
                 },
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "myerror.InternalServerError": {
-            "type": "object",
-            "properties": {
-                "err": {
-                    "type": "string"
-                },
-                "msg": {
                     "type": "string"
                 }
             }
