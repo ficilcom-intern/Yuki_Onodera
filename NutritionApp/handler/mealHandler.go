@@ -46,7 +46,7 @@ type postMealResponse struct {
 	Calories float64 `json:"calories"`
 }
 
-// Postmeals godoc
+// Postmeal godoc
 // @ID postMeals
 // @Description 食事を追加する
 // @Accept   json
@@ -104,7 +104,7 @@ type getMealsResponse struct {
 	Calories float64 `json:"calories"`
 }
 
-// Getmeals godoc
+// Getmeal godoc
 // @ID getMealsId
 // @Description 食事を取得する
 // @Accept   json
@@ -157,7 +157,7 @@ type putMealsResponse struct {
 	Calories float64 `json:"calories"`
 }
 
-// Putmeals godoc
+// Putmeal godoc
 // @ID putMealsId
 // @Description 食事を更新する
 // @Accept   json
@@ -199,7 +199,7 @@ func (mh *mealHandler) Put(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// Deletemeals godoc
+// Deletemeal godoc
 // @ID deleteMealsId
 // @Description 食事を消去する
 // @Accept   json
