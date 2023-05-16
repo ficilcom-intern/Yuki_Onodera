@@ -22,8 +22,3 @@ $ docker compose up
 
 # エンドポイント
 [Swagger](https://github.com/ficilcom-intern/Yuki_Onodera/tree/feature/itn-202/NutritionApp/docs)
-
-
-
-
-
