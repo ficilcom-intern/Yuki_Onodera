@@ -234,8 +234,7 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 // @Failure  400
 // @Failure  401
 // @Failure  404
-//
-//	@Failure 500
+// @Failure 500
 func (mh *mealHandler) GetAll(c echo.Context) error {
 	foundMeals, err := mh.mealUsecase.FindAll(c)
 	if err != nil {
