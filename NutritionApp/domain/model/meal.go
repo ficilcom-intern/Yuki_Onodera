@@ -20,7 +20,7 @@ type Meal struct {
 
 func NewMeal(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) (*Meal, error) {
 	if mealType == "" {
-		return nil, errors.New("食事の種類を入力してください")
+		return nil, errors.New("mealType is empty")
 	}
 
 	meal := &Meal{
@@ -37,7 +37,7 @@ func NewMeal(userID int, memo string, mealType string, carbs float64, fat float6
 
 func (m *Meal) Set(userID int, memo string, mealType string, carbs float64, fat float64, protein float64, calories float64) error {
 	if mealType == "" {
-		return errors.New("食事の種類を入力してください")
+		return errors.New("mealType is empty")
 	}
 
 	m.UserID = userID

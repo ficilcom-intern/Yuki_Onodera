@@ -34,6 +34,6 @@ func Connect() {
 	db.AutoMigrate(model.User{}, model.Meal{})
 }
 
-func DB() *gorm.DB{
+func DB() *gorm.DB {
 	return db
 }
