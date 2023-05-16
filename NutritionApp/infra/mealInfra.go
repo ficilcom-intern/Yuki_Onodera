@@ -40,6 +40,7 @@ func (mr *MealRepository) Delete(meal *model.Meal) error {
 	return nil
 }
 
+// mealのIDからクエリを取得
 func (mr *MealRepository) FindByID(id int, uid int) (*model.Meal, error) {
 	meal := &model.Meal{ID: id, UserID: uid}
 	if err := mr.Conn.First(&meal).Error; err != nil {
@@ -48,6 +49,7 @@ func (mr *MealRepository) FindByID(id int, uid int) (*model.Meal, error) {
 	return meal, nil
 }
 
+// Userに紐づく全mealクエリを取得
 func (mr *MealRepository) FindAll(uid int) ([]*model.Meal, error) {
 	var meals []*model.Meal
 	err := mr.Conn.Where("user_id = ?", uid).Find(&meals).Error

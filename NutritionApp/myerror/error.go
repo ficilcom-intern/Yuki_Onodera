@@ -14,6 +14,7 @@ type BadRequestError struct {
 }
 
 func (e *BadRequestError) Error() string {
+	// Errを返さない、もしくは補足が必要な場合Msgを利用
 	if e.Msg == "" {
 		return fmt.Sprintf("%s", e.Err)
 	}
@@ -75,8 +76,6 @@ func JSONErrorHandler(err error, c echo.Context) {
 	if err == nil {
 		return
 	}
-
-	// エラーハンドリング
 	switch e := err.(type) {
 	case *BadRequestError:
 		c.JSON(http.StatusBadRequest, map[string]interface{}{

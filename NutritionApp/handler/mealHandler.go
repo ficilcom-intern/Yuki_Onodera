@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"kunikida123456/NutritionApp/usecase"
-	"kunikida123456/NutritionApp/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -64,7 +63,7 @@ func (mh *mealHandler) Post(c echo.Context) error {
 		return err
 	}
 
-	userID := util.UserIDFromToken(c)
+	userID := util.getUserIDFromToken(c)
 	createdMeal, err := mh.mealUsecase.Create(userID, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return err
@@ -224,7 +223,6 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-
 // GetAllmeals godoc
 // @ID getMeals
 // @Description すべての食事を取得
@@ -235,6 +233,7 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 // @Failure  400
 // @Failure  401
 // @Failure  404
+//
 //	@Failure 500
 func (mh *mealHandler) GetAll(c echo.Context) error {
 	foundMeals, err := mh.mealUsecase.FindAll(c)
