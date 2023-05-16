@@ -49,7 +49,7 @@ func GenerateSignedString(userId int, name string) (string, error) {
 	return token.SignedString(getJWTSecret())
 }
 
-func getUserIDFromToken(c echo.Context) int {
+func GetUserIDFromToken(c echo.Context) int {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*MyJWTClaims)
 	return claims.ID

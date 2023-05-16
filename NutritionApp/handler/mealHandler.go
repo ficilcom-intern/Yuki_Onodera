@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"kunikida123456/NutritionApp/usecase"
+	"kunikida123456/NutritionApp/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -63,7 +64,7 @@ func (mh *mealHandler) Post(c echo.Context) error {
 		return err
 	}
 
-	userID := util.getUserIDFromToken(c)
+	userID := util.GetUserIDFromToken(c)
 	createdMeal, err := mh.mealUsecase.Create(userID, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return err

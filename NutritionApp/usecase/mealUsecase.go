@@ -4,6 +4,7 @@ import (
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
 	"kunikida123456/NutritionApp/myerror"
+	"kunikida123456/NutritionApp/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -39,7 +40,7 @@ func (mu *mealUsecase) Create(userID int, memo string, mealType string, carbs fl
 }
 
 func (mu *mealUsecase) Update(c echo.Context, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
-	uid := util.getUserIDFromToken(c)
+	uid := util.GetUserIDFromToken(c)
 	targetMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
@@ -59,7 +60,7 @@ func (mu *mealUsecase) Update(c echo.Context, id int, memo string, Type string, 
 }
 
 func (mu *mealUsecase) Delete(c echo.Context, id int) error {
-	uid := util.getUserIDFromToken(c)
+	uid := util.GetUserIDFromToken(c)
 
 	targetMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
@@ -74,7 +75,7 @@ func (mu *mealUsecase) Delete(c echo.Context, id int) error {
 }
 
 func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
-	uid := util.getUserIDFromToken(c)
+	uid := util.GetUserIDFromToken(c)
 	foundMeals, err := mu.mealRepo.FindAll(uid)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
@@ -84,7 +85,7 @@ func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
 }
 
 func (mu *mealUsecase) FindByID(c echo.Context, id int) (*model.Meal, error) {
-	uid := util.getUserIDFromToken(c)
+	uid := util.GetUserIDFromToken(c)
 	foundMeal, err := mu.mealRepo.FindByID(id, uid)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
