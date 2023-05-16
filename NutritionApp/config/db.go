@@ -20,7 +20,7 @@ func Connect() {
 		log.Fatal("Error loading .env file")
 	}
 
-	dbHost := "go_db"
+	dbHost := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_DATABASE")
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASSWORD")
@@ -32,7 +32,6 @@ func Connect() {
 	}
 
 	db.AutoMigrate(model.User{}, model.Meal{})
-	// db.Model(model.Item{}).AddForeignKey("id", "kind(id)", "RESTRICT", "RESTRICT")
 }
 
 func DB() *gorm.DB{
