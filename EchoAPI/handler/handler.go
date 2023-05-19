@@ -4,7 +4,8 @@ import (
     "net/http"
     "strconv"
 
-    "github.com/labstack/echo"
+    "github.com/labstack/echo/v4"
+    "github.com/kunikida123456/EchoAPI/util"
     "github.com/kunikida123456/EchoAPI/model"
 )
 
@@ -21,7 +22,9 @@ func AddTodo(c echo.Context) error {
         }
     }
 
-    uid := userIDFromToken(c)
+    uid := util.userIDFromToken(c)
+    if err != nil {
+
     if user := model.FindUser(&model.User{ID: uid}); user.ID == 0 {
         return echo.ErrNotFound
     }

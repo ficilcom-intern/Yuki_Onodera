@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 	"github.com/kunikida123456/EchoAPI/model"
+	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
 )
 
 type jwtCustomClaims struct {
@@ -85,6 +85,6 @@ func Login(c echo.Context) error {
 func userIDFromToken(c echo.Context) int {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*jwtCustomClaims)
-	uid := claims.UID
+	uid := claims.ID
 	return uid
 }
