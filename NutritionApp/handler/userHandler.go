@@ -107,9 +107,9 @@ func (uh *userHandler) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-type userLogoutResponse struct {
-	Token string `json:"token`
-}
+// type userLogoutResponse struct {
+// 	Token string `json:"token`
+// }
 
 // // Logout godoc
 // // @ID postUsersLogout
