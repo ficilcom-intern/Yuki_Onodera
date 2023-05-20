@@ -6,6 +6,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/labstack/echo-jwt/v4 v4.1.0
 	github.com/labstack/echo/v4 v4.9.0
+	github.com/stretchr/testify v1.8.3
 	github.com/subosito/gotenv v1.4.2
 	github.com/swaggo/swag v1.16.1
 	golang.org/x/crypto v0.6.0
@@ -14,7 +15,6 @@ require (
 )
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
@@ -33,7 +33,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/testify v1.8.3 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/net v0.10.0 // indirect
