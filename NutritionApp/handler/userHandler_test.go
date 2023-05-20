@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -57,7 +56,6 @@ func TestSignup(t *testing.T) {
 
 	// 結果の検証
 	assert.NoError(t, err)
-	fmt.Println(rec.Code)
 	assert.Equal(t, http.StatusCreated, rec.Code)
 
 	expectedResponse := `{"id":1,"name":"John Doe","email":"john@example.com"}`
