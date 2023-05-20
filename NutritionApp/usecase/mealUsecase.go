@@ -4,9 +4,6 @@ import (
 	"kunikida123456/NutritionApp/domain/model"
 	"kunikida123456/NutritionApp/domain/repository"
 	"kunikida123456/NutritionApp/myerror"
-	"kunikida123456/NutritionApp/util"
-
-	"github.com/labstack/echo/v4"
 )
 
 type MealUsecase interface {
