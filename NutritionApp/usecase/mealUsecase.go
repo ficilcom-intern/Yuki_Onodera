@@ -11,10 +11,10 @@ import (
 
 type MealUsecase interface {
 	Create(userID int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error)
-	Update(c echo.Context, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error)
-	Delete(c echo.Context, id int) error
-	FindAll(c echo.Context) ([]*model.Meal, error)
-	FindByID(c echo.Context, id int) (*model.Meal, error)
+	Update(userID int, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error)
+	Delete(userID int, id int) error
+	FindAll(userID int) ([]*model.Meal, error)
+	FindByID(userID int,id int) (*model.Meal, error)
 }
 
 type mealUsecase struct {
@@ -39,14 +39,13 @@ func (mu *mealUsecase) Create(userID int, memo string, mealType string, carbs fl
 	return createdMeal, nil
 }
 
-func (mu *mealUsecase) Update(c echo.Context, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
-	uid := util.GetUserIDFromToken(c)
-	targetMeal, err := mu.mealRepo.FindByID(id, uid)
+func (mu *mealUsecase) Update(userID int, id int, memo string, Type string, carbs float64, fat float64, protein float64, calories float64) (*model.Meal, error) {
+	targetMeal, err := mu.mealRepo.FindByID(id, userID)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
 	}
 
-	err = targetMeal.Set(uid, memo, Type, carbs, fat, protein, calories)
+	err = targetMeal.Set(userID, memo, Type, carbs, fat, protein, calories)
 	if err != nil {
 		return nil, &myerror.BadRequestError{Err: err}
 	}
@@ -59,10 +58,8 @@ func (mu *mealUsecase) Update(c echo.Context, id int, memo string, Type string, 
 	return updatedMeal, nil
 }
 
-func (mu *mealUsecase) Delete(c echo.Context, id int) error {
-	uid := util.GetUserIDFromToken(c)
-
-	targetMeal, err := mu.mealRepo.FindByID(id, uid)
+func (mu *mealUsecase) Delete(userID int, id int) error {
+	targetMeal, err := mu.mealRepo.FindByID(userID, id)
 	if err != nil {
 		return &myerror.NotFoundError{Err: err}
 	}
@@ -74,9 +71,8 @@ func (mu *mealUsecase) Delete(c echo.Context, id int) error {
 	return nil
 }
 
-func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
-	uid := util.GetUserIDFromToken(c)
-	foundMeals, err := mu.mealRepo.FindAll(uid)
+func (mu *mealUsecase) FindAll(userID int) ([]*model.Meal, error) {
+	foundMeals, err := mu.mealRepo.FindAll(userID)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
 	}
@@ -84,9 +80,8 @@ func (mu *mealUsecase) FindAll(c echo.Context) ([]*model.Meal, error) {
 	return foundMeals, nil
 }
 
-func (mu *mealUsecase) FindByID(c echo.Context, id int) (*model.Meal, error) {
-	uid := util.GetUserIDFromToken(c)
-	foundMeal, err := mu.mealRepo.FindByID(id, uid)
+func (mu *mealUsecase) FindByID(userID int, id int) (*model.Meal, error) {
+	foundMeal, err := mu.mealRepo.FindByID(userID, id)
 	if err != nil {
 		return nil, &myerror.NotFoundError{Err: err}
 	}
