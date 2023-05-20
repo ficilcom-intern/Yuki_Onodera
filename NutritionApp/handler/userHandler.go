@@ -104,7 +104,7 @@ func (uh *userHandler) Login(c echo.Context) error {
 		Token: signedString,
 	}
 
-	return c.JSON(http.StatusCreated, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 type userLogoutResponse struct {
