@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"kunikida123456/NutritionApp/config"
 	"kunikida123456/NutritionApp/infra"
 	"kunikida123456/NutritionApp/myerror"
@@ -23,6 +24,7 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 
 	mealHandler := NewMealHandler(usecase.NewMealUsecase(infra.NewMealRepository(config.DB())))
 	meals.Use(echojwt.WithConfig(util.Config))
+	fmt.Println(echojwt.WithConfig(util.Config))
 	meals.GET("/:id", mealHandler.Get)
 	meals.GET("", mealHandler.GetAll)
 	meals.POST("", mealHandler.Post)
@@ -35,7 +37,6 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 	users.POST("/signup", userHandler.Signup)
 	users.POST("/login", userHandler.Login)
 	// users.POST("/logout", userHandler.Logout)
-
 
 	return e
 

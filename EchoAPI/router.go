@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
 	"github.com/kunikida123456/EchoAPI/handler"
+	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
 )
 
 func newRouter() *echo.Echo {

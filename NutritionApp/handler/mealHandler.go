@@ -120,8 +120,8 @@ func (mh *mealHandler) Get(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
-	foundMeal, err := mh.mealUsecase.FindByID(c, id)
+	userID := util.GetUserIDFromToken(c)
+	foundMeal, err := mh.mealUsecase.FindByID(userID, id)
 	if err != nil {
 		return err
 	}
@@ -180,8 +180,8 @@ func (mh *mealHandler) Put(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return err
 	}
-
-	updatedMeal, err := mh.mealUsecase.Update(c, id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
+	userID := util.GetUserIDFromToken(c)
+	updatedMeal, err := mh.mealUsecase.Update(userID, id, req.Memo, req.MealType, req.Carbs, req.Fat, req.Protein, req.Calories)
 	if err != nil {
 		return err
 	}
@@ -215,8 +215,8 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-
-	err = mh.mealUsecase.Delete(c, id)
+	userID := util.GetUserIDFromToken(c)
+	err = mh.mealUsecase.Delete(userID, id)
 	if err != nil {
 		return err
 	}
@@ -236,10 +236,25 @@ func (mh *mealHandler) Delete(c echo.Context) error {
 // @Failure  404
 // @Failure 500
 func (mh *mealHandler) GetAll(c echo.Context) error {
-	foundMeals, err := mh.mealUsecase.FindAll(c)
+	userID := util.GetUserIDFromToken(c)
+	foundMeals, err := mh.mealUsecase.FindAll(userID)
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, foundMeals)
+	res := make([]getMealsResponse, 0)
+	for _, meal := range foundMeals {
+		mealRes := getMealsResponse{
+			ID:       meal.ID,
+			Memo:     meal.Memo,
+			MealType: meal.MealType,
+			Carbs:    meal.Carbs,
+			Fat:      meal.Fat,
+			Protein:  meal.Protein,
+			Calories: meal.Calories,
+		}
+		res = append(res, mealRes)
+	}
+
+	return c.JSON(http.StatusOK, res)
 
 }
