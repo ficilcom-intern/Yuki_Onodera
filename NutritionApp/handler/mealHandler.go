@@ -241,6 +241,20 @@ func (mh *mealHandler) GetAll(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, foundMeals)
+	res := make([]getMealsResponse, 0)
+	for _, meal := range foundMeals {
+		mealRes := getMealsResponse{
+			ID:       meal.ID,
+			Memo:     meal.Memo,
+			MealType: meal.MealType,
+			Carbs:    meal.Carbs,
+			Fat:      meal.Fat,
+			Protein:  meal.Protein,
+			Calories: meal.Calories,
+		}
+		res = append(res, mealRes)
+	}
+
+	return c.JSON(http.StatusOK, res)
 
 }
