@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -298,6 +297,5 @@ func TestGetAllMeals(t *testing.T) {
 	// レスポンスのアサーション
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rec.Code)
-	fmt.Println(expectedRes, rec.Body.String())
 	assert.JSONEq(t, expectedRes, rec.Body.String())
 }
