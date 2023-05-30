@@ -27,6 +27,16 @@ type calculateBMIResponse struct {
 	bmi float64 `json:"bmi"`
 }
 
+// CalculateBMI BMIを計算するハンドラー
+// @Summary Calculate BMI
+// @Description Calculate BMI based on height and weight
+// @Accept json
+// @Produce json
+// @Param req body calculateBMIRequest true "Request body"
+// @Failure  400
+// @Failure  401
+// @Failure 500
+// @Router　meals/calculate/bmi [post]
 func (h *ProfileHandler) CalculateBMI(c echo.Context) error {
 	req := new(calculateBMIRequest)
 	if err := c.Bind(&req); err != nil {
@@ -58,6 +68,17 @@ type calculateDailyNutritionsResponse struct {
 	bmr           float64 `json:"bmr"`
 }
 
+// CalculateDailyNutritions 一日の必要栄養素を計算するハンドラー
+// @Summary Calculate Daily Nutritions
+// @Description Calculate daily recommended intake of carbohydrates, protein, fat, and basal metabolic rate (BMR)
+// @Accept json
+// @Produce json
+// @Param req body calculateDailyNutritionsRequest true "Request body"
+// @Success 200 {object} calculateDailyNutritionsResponse
+// @Failure  400
+// @Failure  401
+// @Failure 500
+// @Router meals/calculate/daily-nutritions [post]
 func (h *ProfileHandler) CalculateDailyNutritions(c echo.Context) error {
 	req := new(calculateDailyNutritionsRequest)
 	if err := c.Bind(&req); err != nil {
