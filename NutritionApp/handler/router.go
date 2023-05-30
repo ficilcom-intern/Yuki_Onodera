@@ -30,8 +30,8 @@ func InitRouting(e *echo.Echo) *echo.Echo {
 	meals.DELETE("/:id", mealHandler.Delete)
 
 	profileHandler := NewProfileHandler(usecase.NewProfileUsecase())
-	meals.GET("/calculate/bmi", profileHandler.CalculateBMI)
-	meals.GET("/calculate/daily-nutrition", profileHandler.CalculateDailyNutritions)
+	meals.POST("/calculate/bmi", profileHandler.CalculateBMI)
+	meals.POST("/calculate/daily-nutrition", profileHandler.CalculateDailyNutritions)
 
 	users := e.Group("/users")
 	userHandler := NewUserHandler(usecase.NewUserUsecase(infra.NewUserRepository(config.DB())))
